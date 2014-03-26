@@ -60,29 +60,37 @@ class SharePrice(object):
                 if key not in company_data:
                     company_data[key] = []
                 company_data[key].append(self.data[row][column])
+        result = {}
         for c in range(self.company_count):
             key = "Company-%d" %(c+1)
             value = company_data[key]
             max_indices = [i for i in range(len(value)) if value[i] == max(value)]
             #get the year from 0th index, month from 1st index
             durations = ["%s-%s" %(company_data['Year'][index], company_data['Month'][index]) for index in max_indices]
-            print "%s at its max on %s" %(key, ",".join(durations))
-        #DONE
+            result[key] = ", ".join(durations)
+        return result
 
-
-if __name__ == '__main__':
-    print "\n\tUsage : `python %s <file_name.csv> <company_count : default 10> <year_from : default 1990>`\n" %(sys.argv[0])
-    if len(sys.argv)<2:
+def main(args):
+    print args
+    if len(args)<2:
         print "\n\tplease follow the Usage instructions !!!"
         sys.exit(0)
     try:
-        obj = SharePrice(int(sys.argv[2]) if len(sys.argv)>2 else DEFAULT_COMPANY_COUNT, int(sys.argv[3]) if len(sys.argv)>3 else DEFAUTL_FROM_YEAR)
+        obj = SharePrice(int(args[2]) if len(args)>2 else DEFAULT_COMPANY_COUNT, int(args[3]) if len(args)>3 else DEFAUTL_FROM_YEAR)
     except ValueError as e:
         print "provided data is not valid, i m using a default values for demo"
         obj = SharePrice()
     obj.generate_sample_data()
     #write data to csv
-    obj.write_to_csv(sys.argv[1])
-    obj.read_from_csv(sys.argv[1])
-    obj.get_max_index()
-    print "\n\tyou can check the data from : %s" %(sys.argv[1])
+    obj.write_to_csv(args[1])
+    obj.read_from_csv(args[1])
+    result = obj.get_max_index()
+    for index in range(obj.company_count):
+        key = 'Company-%d' %(index+1)
+        print "%s at its max on %s" %(key, result.get(key, '-NA-'))
+    print "\n\tyou can check the data from : %s" %(args[1])
+
+
+if __name__ == '__main__':
+    print "\n\tUsage : `python %s <file_name.csv> <company_count : default 10> <year_from : default 1990>`\n" %(sys.argv[0])
+    main(sys.argv)
