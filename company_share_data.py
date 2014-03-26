@@ -20,6 +20,9 @@ class SharePrice(object):
         self.data = []
 
     def generate_sample_data(self):
+        """
+            It generates sample data for company share indexes for given year/month
+        """
         file_data = []
         header = ['Year', 'Month']
         header.extend(['Company-%d' %(c+1) for c in range(self.company_count)])
@@ -34,6 +37,9 @@ class SharePrice(object):
         self.data = file_data
 
     def write_to_csv(self, file_path):
+        """
+            it writes the generated sample data to csv file
+        """
         with open(file_path, 'wb') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(self.header)
@@ -41,6 +47,9 @@ class SharePrice(object):
         return file_path
 
     def read_from_csv(self, file_path):
+        """
+            it reads data from csv file
+        """
         data = []
         try:
             with open(file_path, 'rb') as csv_file:
@@ -54,6 +63,10 @@ class SharePrice(object):
             return
 
     def get_max_index(self):
+        """
+            just transpose the csv data to get the list for each company
+            get the index and return duration when the share prices were high
+        """
         company_data = {}
         for row, each_row in enumerate(self.data):
             for column, key in enumerate(self.header):
@@ -71,7 +84,9 @@ class SharePrice(object):
         return result
 
 def main(args):
-    print args
+    """
+        main execution method to get the expected result after a lot of processing
+    """
     if len(args)<2:
         print "\n\tplease follow the Usage instructions !!!"
         sys.exit(0)

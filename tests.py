@@ -4,9 +4,17 @@ import unittest
 from company_share_data import SharePrice
 
 class TestSharePrice(unittest.TestCase):
-
+    """
+        UnitTest case for SharePrice
+    """
     def setUp(self):
+        """
+            header as per the csv file, its sample for 5 companies
+        """
         self.header = ['Year', 'Month', 'Company-1', 'Company-2', 'Company-3', 'Company-4', 'Company-5']
+        """
+           parsed data from csv as per 2013 share indexes for given 5 companies
+        """
         self.data = [
                 [2013, 'Jan', 123, 31, 199, 257, 61],
                 [2013, 'Feb', 124, 32, 198, 255, 62],
@@ -21,6 +29,9 @@ class TestSharePrice(unittest.TestCase):
                 [2013, 'Nov', 133, 29, 189, 270, 64],
                 [2013, 'Dec', 134, 28, 188, 274, 63],
             ]
+        """
+           Its the manually predicted result which is expected from the program result
+        """
         self.predicted_result = {'Company-1': '2013-Dec', 'Company-2': '2013-May', 'Company-3': '2013-Jan',
             'Company-4': '2013-Jun', 'Company-5': '2013-Apr'} 
 
