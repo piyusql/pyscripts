@@ -95,15 +95,16 @@ def main(args):
     except ValueError as e:
         print "provided data is not valid, i m using a default values for demo"
         obj = SharePrice()
-    obj.generate_sample_data()
+    #obj.generate_sample_data()
     #write data to csv
-    obj.write_to_csv(args[1])
+    #obj.write_to_csv(args[1])
+    #read data from the given csv file
     obj.read_from_csv(args[1])
     result = obj.get_max_index()
     for index in range(obj.company_count):
         key = 'Company-%d' %(index+1)
         print "%s at its max on %s" %(key, result.get(key, '-NA-'))
-    print "\n\tyou can check the data from : %s" %(args[1])
+    print "\n\tThank You ;)"
 
 
 if __name__ == '__main__':

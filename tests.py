@@ -8,40 +8,28 @@ class TestSharePrice(unittest.TestCase):
         UnitTest case for SharePrice
     """
     def setUp(self):
-        """
-            header as per the csv file, its sample for 5 companies
-        """
-        self.header = ['Year', 'Month', 'Company-1', 'Company-2', 'Company-3', 'Company-4', 'Company-5']
-        """
-           parsed data from csv as per 2013 share indexes for given 5 companies
-        """
-        self.data = [
-                [2013, 'Jan', 123, 31, 199, 257, 61],
-                [2013, 'Feb', 124, 32, 198, 255, 62],
-                [2013, 'Mar', 125, 33, 197, 253, 63],
-                [2013, 'Apr', 126, 34, 196, 251, 71],
-                [2013, 'May', 127, 35, 195, 249, 70],
-                [2013, 'Jun', 128, 34, 194, 275, 69],
-                [2013, 'Jul', 129, 33, 193, 254, 68],
-                [2013, 'Aug', 130, 32, 192, 258, 67],
-                [2013, 'Sep', 131, 31, 191, 262, 66],
-                [2013, 'Oct', 132, 30, 190, 266, 65],
-                [2013, 'Nov', 133, 29, 189, 270, 64],
-                [2013, 'Dec', 134, 28, 188, 274, 63],
-            ]
-        """
-           Its the manually predicted result which is expected from the program result
-        """
-        self.predicted_result = {'Company-1': '2013-Dec', 'Company-2': '2013-May', 'Company-3': '2013-Jan',
-            'Company-4': '2013-Jun', 'Company-5': '2013-Apr'} 
+        #given test sample data file
+        self.file_name = 'sample_test_data.csv'
+
+        #expected result from given csv file
+        self.predicted_result = {'Company-1': '2012-May',
+                                 'Company-2': '2013-Dec',
+                                 'Company-3': '2007-May',
+                                 'Company-4': '1995-Oct, 1997-Dec',
+                                 'Company-5': '2011-Dec',
+                                 'Company-6': '1998-Nov',
+                                 'Company-7': '1996-Dec',
+                                 'Company-8': '2000-Oct',
+                                 'Company-9': '1995-Nov',
+                                 'Company-10': '2010-Dec'}
 
     def test_max_price_share(self):
-        # make sure the shuffled data have the same result
-        random.shuffle(self.data)
-        obj = SharePrice(5,2013)
-        obj.header = self.header
-        obj.data = self.data
+        #print "\nExpected result : %s" %(self.predicted_result)
+        #parse data from the given test file
+        obj = SharePrice()
+        obj.read_from_csv(self.file_name)
         result = obj.get_max_index()
+        #compare with the calculated result
         self.assertEqual(self.predicted_result, result)
 
 
