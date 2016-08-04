@@ -31,28 +31,46 @@ class DownloadSong(object):
         self.log.debug("Parameters set to %s" % (self.__dict__))
         self.command_queue = Queue()
         self.thread = min(5, self.thread)
+        self.start_time = time.time()
+        self.count = 0
+        self.folder = self.get_folder_name_from_url()
 
-    def _get_content(self):
+    def _get_content(self, next_url=None):
         try:
-            if self.file:
-                response = open(self.file).read()
-            else:
+            if self.url or next_url:
                 headers = {'User-Agent': 'Mozilla/5.0'}
-                req = urllib2.Request(self.url, None, headers)
+                req = urllib2.Request(next_url or self.url, None, headers)
                 response = urllib2.urlopen(req).read()
+            else:
+                response = open(self.file).read()
             return response
         except IOError as e:
             self.log.error("Invalid file/url")
-            sys.exit(1)
+            if next_url:
+                return ''
+            else:
+                sys.exit(1)
 
     def get_song_list(self):
-        soup = bs(self._get_content())
+        if self.list_of_url:
+            for line in open(self.file):
+                next_url = line.strip()
+                soup = bs(self._get_content(next_url))
+                self.log.debug(
+                    "Q-length : %d, Parsing URL : %s" %
+                    (self.command_queue.qsize(), next_url))
+                yield self.parse_html(soup)
+        else:
+            soup = bs(self._get_content())
+            yield self.parse_html(soup)
+
+    def parse_html(self, soup):
         songs = soup.findAll('a', href=re.compile("http(s)?://.*.mp3$"))
         if not songs:
             # TYPE : http://link.songspk.tv/link/song.php?songid=6549
             songs = soup.findAll(
                 'a', href=re.compile("http(s)?://.*?songid=.*"))
-        return [(y.text.strip(), y.attrMap.get('href')) for y in songs]
+        return [self._enqueue_single(y.text.strip(), y.attrMap.get('href')) for y in songs]
 
     def get_folder_name_from_url(self):
         create_dir_if_not_exists = lambda dir_path: os.makedirs(
@@ -63,16 +81,19 @@ class DownloadSong(object):
         return folder_name
 
     def save_songs_to_disk(self, songs):
-        folder = self.get_folder_name_from_url()
         self.log.info(
             "Downloading starts... You can find it here(%s)." %
-            (folder))
-        for s_name, s_url in songs:
-            file_name = "-".join((s_name or s_url.split('/')
-                                  [-1]).replace('-', '').split())
-            path = os.path.join(folder, file_name +
-                                ('.mp3' if not file_name.endswith('.mp3') else ''))
-            self.command_queue.put((path, s_url,))
+            (self.folder))
+        for _list_of_songs in songs:
+            # Do nothing just iterate
+            pass
+
+    def _enqueue_single(self, s_name, s_url):
+        file_name = "-".join((s_name or s_url.split('/')
+                              [-1]).replace('-', '').split())
+        path = os.path.join(self.folder, file_name +
+                            ('.mp3' if not file_name.endswith('.mp3') else ''))
+        self.command_queue.put((path, s_url,))
 
     def downloadEnclosures(self, i):
         """This is the worker thread function.
@@ -97,20 +118,34 @@ class DownloadSong(object):
         if not self.fake:
             p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE, shell=True)
             output, error = p.communicate()
+            self.count += 1
             if error:
                 self.log.error(error)
+        self.timer()
 
     def enqueue(self):
         songs = self.get_song_list()
-        self.log.info("%d songs found..." % (len(songs)))
-        self.save_songs_to_disk(songs)
         # Set up some threads to fetch the enclosures
         for i in range(self.thread):
             worker = threading.Thread(
                 target=self.downloadEnclosures, args=(i,))
             worker.setDaemon(True)
             worker.start()
+        # pump the url data input to the queue
+        self.save_songs_to_disk(songs)
+        # wait the program till all the songs downloaded
         self.command_queue.join()
+
+    def timer(self):
+        t2 = time.time()
+        time_elapsed = t2 - self.start_time
+        self.log.info(
+            "Total songs downloaded %d in %02d:%02d min" %
+            (self.count,
+             time_elapsed //
+             60,
+             time_elapsed %
+             60))
 
 
 def main():
@@ -130,9 +165,9 @@ def main():
         default=3,
         help='Max length of parallel running thread')
     parser.add_argument(
-        '-s',
-        '--song-of-the-day',
-        help='It will fetch the list of songs from songs-of-the-day category',
+        '-l',
+        '--list-of-url', action='store_true',
+        help='It will fetch songs from list of urls',
         required=False)
     parser.add_argument(
         '-r',
