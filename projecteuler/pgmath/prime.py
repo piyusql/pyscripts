@@ -7,6 +7,32 @@ def nextNumber(number=prime_list[-1]):
     return max(prime_list[-1], number) + 2
 
 
+def nPrime(N):
+    global prime_list
+    if len(prime_list) >= N:
+        # already calculated earlier
+        yield prime_list[N - 1]
+    number = nextNumber()
+    counter = len(prime_list)
+    while counter < N:
+        for prime in prime_list:
+            if prime > math.sqrt(number):
+                # No need to check next, no factor available
+                prime_list.append(number)
+                counter += 1
+                yield number
+                break
+            elif number % prime == 0:
+                # Not a prime, factors available
+                break
+            else:
+                # Continue to check the divisiblity with next big prime no from
+                # already available list
+                continue
+        # look for next number
+        number = nextNumber(number)
+
+
 def primeTillN(N):
     global prime_list
     for prime in prime_list:
