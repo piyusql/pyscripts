@@ -27,7 +27,6 @@
 """
 
 
-from pgmath.prime import nPrime
 from functools import reduce
 number_series = """
 73167176531330624919225119674426574742355349194934
