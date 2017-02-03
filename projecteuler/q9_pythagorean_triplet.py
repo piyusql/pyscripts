@@ -32,7 +32,8 @@ def find_pythagorean(N):
     for a in xrange(1, N / 2):
         for b in xrange(1, N / 2):
             for c in xrange(1, N / 2):
-                if check_pythagorean(a, b, c) and (a + b + c) == N:
+                # check the sum first to do smaller calculation
+                if (a + b + c) == N and check_pythagorean(a, b, c):
                     return a, b, c
     # all check for triangle side size N/2 checked
     return

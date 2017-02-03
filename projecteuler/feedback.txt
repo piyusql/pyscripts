@@ -1,0 +1,32 @@
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Q9 : line 31, do the sum calculation first and square last will make efficiency
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+piyusg@ubuntu:/data/pyscripts/projecteuler⟫ time python q9_pythagorean_triplet.py                                                                                                                               
+Enter value for a+b+c : 12
+Numbers : 3, 4, 5, Product : 60
+
+real    0m2.464s
+user    0m0.016s
+sys     0m0.000s
+piyusg@ubuntu:/data/pyscripts/projecteuler⟫ time python q9_pythagorean_triplet.py 
+Enter value for a+b+c : 1000
+Numbers : 200, 375, 425, Product : 31875000
+
+real    0m20.382s
+user    0m18.748s
+sys     0m0.088s
+piyusg@ubuntu:/data/pyscripts/projecteuler⟫ time python q9_pythagorean_triplet.py 
+Enter value for a+b+c : 12
+Numbers : 3, 4, 5, Product : 60
+
+real    0m1.961s
+user    0m0.022s
+sys     0m0.017s
+piyusg@ubuntu:/data/pyscripts/projecteuler⟫ time python q9_pythagorean_triplet.py 
+Enter value for a+b+c : 1000
+Numbers : 200, 375, 425, Product : 31875000
+
+real    0m3.806s
+user    0m2.366s
+sys     0m0.024s
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
