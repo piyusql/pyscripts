@@ -29,7 +29,7 @@
 
 def find_pythagorean(N):
     check_pythagorean = lambda x, y, z: (x ** 2) + (y ** 2) == (z ** 2)
-    # since it is given that a > b > c
+    # since it is given that a < b < c
     for a in xrange(1, N / 2):
         for b in xrange(a, N / 2):
             c = N - a - b
