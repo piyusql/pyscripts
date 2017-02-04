@@ -29,12 +29,12 @@
 
 def find_pythagorean(N):
     check_pythagorean = lambda x, y, z: (x ** 2) + (y ** 2) == (z ** 2)
+    # since it is given that a > b > c
     for a in xrange(1, N / 2):
-        for b in xrange(1, N / 2):
-            for c in xrange(1, N / 2):
-                # check the sum first to do smaller calculation
-                if (a + b + c) == N and check_pythagorean(a, b, c):
-                    return a, b, c
+        for b in xrange(a, N / 2):
+            c = N - a - b
+            if check_pythagorean(a, b, c):
+                return a, b, c
     # all check for triangle side size N/2 checked
     return
 
