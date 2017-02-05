@@ -3,7 +3,7 @@
     @email   : PiyusGupta01@gmail.com
     @created : Feb 5, 2017
 
-    ProjectEuler Q-20 : Largest product in a grid
+    ProjectEuler Q-11 : Largest product in a grid
         What is the greatest product of N adjacent numbers
     in the same direction (up, down, left, right, or diagonally)
     in the 20x20 grid ?
