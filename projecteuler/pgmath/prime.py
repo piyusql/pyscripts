@@ -7,6 +7,18 @@ def nextNumber(number=prime_list[-1]):
     return max(prime_list[-1], number) + 2
 
 
+def isPrime(N):
+    global prime_list
+    if N in prime_list:
+        # already calculated earlier
+        return True
+    prime_list = [p for p in primeTillN(int(N**0.5))]
+    for prime in prime_list:
+        if N % prime ==0:
+            return False
+    return True
+
+
 def nPrime(N):
     global prime_list
     if len(prime_list) >= N:
