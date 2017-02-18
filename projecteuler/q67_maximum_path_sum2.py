@@ -3,9 +3,10 @@
     @email   : PiyusGupta01@gmail.com
     @created : Feb 18, 2017
 
-    ProjectEuler Q-18 : maximum path sum while travelling on a triangle to either 1 left or 1 right number
+    ProjectEuler Q-67 : maximum path sum while travelling on a triangle to either 1 left or 1 right number
+    This is difficult version of Q-18 where no of rows in triangle is more.
 
-    ref : https://projecteuler.net/problem=18
+    ref : https://projecteuler.net/problem=67
 """
 triangle = """
 75
@@ -26,6 +27,7 @@ triangle = """
 """
 import sys
 from pgmath.factorial import memoize
+
 
 def parse_triangle(_file):
     return parse_triangle_from_text(open(_file).read())
@@ -60,11 +62,13 @@ def simple_parse(text):
 def simple_parse_from_file(_file):
     return simple_parse(open(_file).read())
 
+
 @memoize
 def get_max_value(line_no, index):
     """
     Simple recursive method to find max sum
     complexity = 2^n where n is no of rows
+    using memoize changed the complexity from 2^n to n^2 i.e, n(n+1)/2.
     """
     global iterations
     iterations += 1
